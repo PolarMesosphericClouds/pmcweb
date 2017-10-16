@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static','css/gallery.css')}}"/>
+{{end}}
+<h2>{{=' '.join(x.capitalize() for x in request.function.split('_'))}}</h2>
+{{for (index,row) in image_table.iterrows():}}
+<div class="responsive">
+    <div class="gallery">
+{{=A(IMG(_src=URL('image.jpg',vars=dict(filename=row.filename))), _target="_blank", _href=URL('image.jpg',vars=dict(filename=row.filename)))}}
+    </div>
+    <div class="desc">{{=row.filename}}</div>
+</div>
+{{pass}}
+
+
+{{if request.is_local:}}
+{{=response.toolbar()}}
+{{pass}}
