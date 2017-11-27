@@ -10,22 +10,42 @@ def index():
 def error():
     return dict()
 
+def _fix_filename(filename):
+    import os
+    if os.path.exists(filename):
+        return filename
+    return filename.replace('/data','/data/pmc')
+
 def browse_images():
     from pmc_turbo.ground.ground_index import get_file_index
     from pmc_turbo.communication.file_format_classes import JPEGFile
-    mi = get_file_index(data_dir_glob='/data/pmc/piggyback_gse_data/2*')
+    mi = get_file_index(data_dir_glob='/data/piggyback_gse_data/2*')
     dd = mi.df[mi.df.file_type==JPEGFile.file_type]
     image_table = dd.iloc[-25:]
-    image_table.sort_values(by='last_timestamp',ascending=False,inplace=True)
+    image_table = image_table.sort_values(by='last_timestamp',ascending=False)
     return dict(image_table=image_table)
 
 def image():
     print request.vars.filename
     if request.vars.filename:
         from pmc_turbo.communication.file_format_classes import load_and_decode_file
-        result = load_and_decode_file(request.vars.filename)
+        filename = _fix_filename(request.vars.filename)
+        print filename
+        result = load_and_decode_file(filename)
         return result.payload
     return request.vars
+
+def view_image():
+    print request.vars.filename
+    if request.vars.filename:
+        from pmc_turbo.communication.file_format_classes import load_and_decode_file
+        filename = _fix_filename(request.vars.filename)
+        print filename
+        result = load_and_decode_file(filename)
+        parameters = dict([(k,getattr(result,k)) for k in result._metadata_parameter_names])
+        return dict(parameters=parameters, filename=request.vars.filename)
+    return request.vars
+
 
 
 def leader_short_status():

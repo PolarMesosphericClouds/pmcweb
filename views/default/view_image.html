@@ -1,0 +1,12 @@
+{{extend 'layout.html'}}
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static','css/gallery.css')}}"/>
+{{end}}
+<h2>{{=filename}}</h2>
+
+{{=A(IMG(_src=URL('image.jpg',vars=dict(filename=filename))), _target="_blank", _href=URL('image.jpg',vars=dict(filename=filename)))}}
+    <div class="desc">{{=BEAUTIFY(parameters)}}</div>
+
+{{if request.is_local:}}
+{{=response.toolbar()}}
+{{pass}}

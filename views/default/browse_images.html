@@ -6,9 +6,9 @@
 {{for (index,row) in image_table.iterrows():}}
 <div class="responsive">
     <div class="gallery">
-{{=A(IMG(_src=URL('image.jpg',vars=dict(filename=row.filename))), _target="_blank", _href=URL('image.jpg',vars=dict(filename=row.filename)))}}
+{{=A(IMG(_src=URL('image.jpg',vars=dict(filename=row.filename))), _target="_blank", _href=URL('view_image.html',vars=dict(filename=row.filename)))}}
     </div>
-    <div class="desc">{{=row.filename}}</div>
+    <div class="desc">{{=row.filename.split('/')[-1]}}</div>
 </div>
 {{pass}}
 
