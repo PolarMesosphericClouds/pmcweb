@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="{{=URL('static','css/gallery.css')}}"/>
 {{end}}
 <h2>{{=' '.join(x.capitalize() for x in request.function.split('_'))}}</h2>
+{{=A("next",_href=next_url)}}
+{{=A("previous",_href=previous_url)}}
+<br>
 {{for (index,row) in image_table.iterrows():}}
 <div class="responsive">
     <div class="gallery">
@@ -11,6 +14,9 @@
     <div class="desc">{{=row.filename.split('/')[-1]}}</div>
 </div>
 {{pass}}
+<br>
+{{=A("next",_href=next_url)}}
+{{=A("previous",_href=previous_url)}}
 
 
 {{if request.is_local:}}

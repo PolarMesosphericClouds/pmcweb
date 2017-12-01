@@ -1,0 +1,16 @@
+{{extend 'layout.html'}}
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static','css/gallery.css')}}"/>
+{{end}}
+<h2>{{=' '.join(x.capitalize() for x in request.function.split('_'))}}</h2>
+<h4>Most recent first:</h4>
+<ul>
+{{for dirname in data_dirs:}}
+    <li>{{=A(dirname,_href=URL("browse_images.html",vars=dict(directory=dirname)))}}</li>
+{{pass}}
+</ul>
+
+
+{{if request.is_local:}}
+{{=response.toolbar()}}
+{{pass}}

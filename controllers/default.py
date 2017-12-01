@@ -16,14 +16,56 @@ def _fix_filename(filename):
         return filename
     return filename.replace('/data','/data/pmc')
 
+def browse_image_directories():
+    import glob
+    data_dirs = glob.glob('/data/piggyback_gse_data/2*')
+    data_dirs.sort(reverse=True)
+    return dict(data_dirs=data_dirs)
+
 def browse_images():
     from pmc_turbo.ground.ground_index import get_file_index
     from pmc_turbo.communication.file_format_classes import JPEGFile
-    mi = get_file_index(data_dir_glob='/data/piggyback_gse_data/2*')
+    if request.vars.directory:
+        directory= request.vars.directory
+    else:
+        directory = '/data/piggyback_gse_data/2*'
+    mi = get_file_index(data_dir_glob=directory)
     dd = mi.df[mi.df.file_type==JPEGFile.file_type]
-    image_table = dd.iloc[-25:]
+    start_from_end = True
+    try:
+        latest_timestamp = int(request.vars.latest_frame_timestamp)
+        dd = dd[dd.frame_timestamp_ns < latest_timestamp]
+        start_from_end = True
+    except Exception:
+        pass
+    try:
+        earliest_timestamp = int(request.vars.earliest_frame_timestamp)
+        dd = dd[dd.frame_timestamp_ns > earliest_timestamp]
+        start_from_end = False
+    except Exception:
+        pass
+
+    num_images_per_page = 25
+    try:
+        num_images_per_page = int(request.vars.num_images_per_page)
+    except Exception:
+        pass
+    if start_from_end:
+        image_table = dd.iloc[-num_images_per_page:]
+    else:
+        image_table = dd.iloc[:num_images_per_page]
+    oldest_timestamp = image_table.frame_timestamp_ns.min()
+    if request.vars.latest_frame_timestamp:
+        newest_timestamp = dd.frame_timestamp_ns.max()
+    else:
+        newest_timestamp = None
     image_table = image_table.sort_values(by='last_timestamp',ascending=False)
-    return dict(image_table=image_table)
+    return dict(image_table=image_table, next_url=URL("browse_images",vars=dict(earliest_frame_timestamp=newest_timestamp,
+                                                                                num_images_per_page=num_images_per_page,
+                                                                                directory=directory)),
+                previous_url=URL("browse_images", vars=dict(latest_frame_timestamp=oldest_timestamp,
+                                                            num_images_per_page=num_images_per_page,
+                                                            directory=directory)))
 
 def image():
     print request.vars.filename
