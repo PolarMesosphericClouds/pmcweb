@@ -1,0 +1,74 @@
+{{extend 'layout.html'}}
+{{block head}}
+<style>
+
+@media screen and (max-device-width: 1200px), screen and (max-width: 1200px) {
+.mobilewrapper {
+width: 100% !important;
+height: auto !important;
+border-collapse: collapse;
+}
+.w320 {
+width: 320px !important;
+height: auto !important;
+}
+.colsplit {
+!width: 320px !important;
+float: left !important;
+display: block !important;
+}
+.colsplit-top {
+width: 320px !important;
+display: table-caption !important;
+}
+.colsplit-middle {
+width: 320px !important;
+display: table-header-group !important;
+}
+.colsplit-bottom {
+width: 320px !important;
+display: table-footer-group !important;
+}
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+#sub_table {
+    width: 100%;
+}
+td, th {
+    border: 1px solid #888888;
+    text-align: left;
+    padding: 4px;
+}
+#value {
+    text-align: right;
+    font-size: 150%;
+}
+#bad_value {
+    text-align: right;
+    font-size: 200%;
+    background-color: red;
+}
+#cold {
+    text-align: right;
+    font-size: 200%;
+    background-color: skyblue;
+}
+tr:nth-child(even) {
+    background-color: #f0f0f0;
+}
+</style>
+{{end}}
+<h2>PMC-Piggyback Status</h2>
+<table border="0" cellspacing="0" cellpadding="0" class="mobilewrapper" align="left">
+  <tr>
+    <td bgcolor="#CCCCCC" align="center" class="colsplit" style="font-weight:normal; vertical-align:top;">{{=system}}</td>
+    <td bgcolor="#00CCFF" align="center" class="colsplit" style="font-weight:normal; vertical-align:top;">{{=sensors}}</td>
+    <td bgcolor="#FFFF00" align="center" class="colsplit" style="font-weight:normal; vertical-align:top;">{{=camera}}</td>
+    <td bgcolor="#00FF00" align="center" class="colsplit" style="font-weight:normal; vertical-align:top;">{{=leader}}</td>
+    <td bgcolor="#FF99FF" align="center" class="colsplit" style="font-weight:normal; vertical-align:top;">{{=auto_exposure}}</td>
+  </tr>
+</table>
